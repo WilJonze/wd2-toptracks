@@ -1,1 +1,1 @@
-console.log("It's linked correctly");
+console.log("JS file is linked correctly");
