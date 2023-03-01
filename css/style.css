@@ -1,12 +1,28 @@
+:root {
+  --color-primary: #fe00fe;
+  --color-secondary: #7700a6;
+  --color-tertiary: #0016ee;
+}
+
 body {
-    margin: 0;
-    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: linear-gradient(
+    to top,
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-tertiary)
+  );
+  width: 100vw;
+  min-height: 100vh;
+  background-repeat: no-repeat;
+
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
 }
 
 h1 {
-    font-family: 'Bebas Neue', Arial, Helvetica, sans-serif;
+  font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
 }
 
 .ranking-numbers {
-    font-family: 'Tilt Prism', 'Bebas Neue', Arial, Helvetica, sans-serif;
+  font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
 }
