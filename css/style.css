@@ -16,8 +16,6 @@ body {
     var(--color-secondary),
     var(--color-tertiary)
   );
-  width: 100vw;
-  min-height: 100vh;
   background-repeat: no-repeat;
 
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
