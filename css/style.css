@@ -1,7 +1,7 @@
 :root {
   --color-faded-white: rgba(255, 255, 255, 0.6);
-  --color-primary: #fe00fe;
-  --color-secondary: #7700a6;
+  --color-primary: #ff2ad4;
+  --color-secondary: #268BFF;
   --color-tertiary: #0016ee;
   --color-text: #fff;
 
@@ -13,11 +13,9 @@ body {
   background: linear-gradient(
     to top,
     var(--color-primary),
-    var(--color-secondary),
-    var(--color-tertiary)
+    var(--color-secondary)
+    /* var(--color-tertiary) */
   );
-  width: 100vw;
-  min-height: 100vh;
   background-repeat: no-repeat;
 
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
@@ -30,8 +28,10 @@ h2 {
   padding: 0;
 }
 
-.ranking-numbers {
+.ranking-numbers, .chosen-song-numbers {
   font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+  font-size: xxx-large;
+  letter-spacing: 0.1em;
 }
 
 /* ============== HEADER STYLING ============== */
@@ -55,6 +55,39 @@ h2 {
   animation-fill-mode: forwards;
 
   font-size: 1.75rem;
+}
+
+/* ============== LAYOUT ============== */
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.search, .chosensong, .ranking-module {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-header);
+}
+
+.search, .ranking-module {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.search {
+  color: var(--color-text);
+  text-align: center;
+}
+
+.chosensong {
+  background-color: var(--color-text);
+}
+
+.chosen-song-numbers {
+  color: var(--color-secondary);
+}
+
+.ranking-module > .ranking-numbers {
+  color: var(--color-tertiary);
 }
 
 /* ================= ANIMATIONS ============== */
