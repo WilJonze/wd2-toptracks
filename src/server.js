@@ -7,7 +7,10 @@ const app = express();
 const port = 3000;
 
 
-const toptracks = require("./src/toptracks");
+const toptracks = require("./toptracks");
+
+app.use('/', express.static('public'))
+
 
 app.use("/api/toptracks", toptracks);
 
@@ -35,8 +38,6 @@ const limiter = rateLimit({
 app.use(limiter);
 
 //test route
-app.get("/", (req, res) => res.json({ success: "Hello World"}));
-
-app.use("/toptracks", toptracks)
+// app.get("/", (req, res) => res.json({ success: "Hello World"}));
 
 app.listen(port, () => console.log(`App listening on port ${port}`));

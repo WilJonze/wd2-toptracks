@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const fetch = require("node-fetch");
-const fetchTracks = require("./fetchTracks")
 
 const fetchTracks = async (searchtext) => {
   const url = `https://api.spotify.com/v1/search?q=${searchtext}&type=track&limit=10`;
@@ -38,14 +37,14 @@ try {
 
 
 
-router.get("/", (req, res) => {
-  res.json({ success: "Hello Spotify!" });
+router.get("/", async (req, res) => {
+  let query = req.query.query;
+  const data = await fetchTracks(query);
+  res.json(data);
 });
 
-router.get("/:searchtext", async (req, res) => {
-  const searchtext = req.params.searchtext;
-  const data = await fetchTracks(searchtext);
-  res.json(data);
+router.get("/test", (req, res) => {
+  res.json({ success: "Hello Spotify!" });
 });
 
 router.post("/", async (req, res) => {
