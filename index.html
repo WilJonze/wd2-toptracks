@@ -9,6 +9,7 @@
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tilt+Prism&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css" />
     <title>Top Tracks</title>
   </head>
@@ -19,9 +20,24 @@
         CK/CL's highest rated songs!
       </h2>
     </header>
+    
     <p>Welcome to the top tracks of code Louisville and code Kentucky.</p>
+    
+    <div class="container">
+      <div class="wrapper">
+        <input type="text" name="search" id="search" placeholder="Search for Song, Artist, or Album!" autocomplete="chrome-off">
+        <button><i class="fa fa-search"></i></button>
+        <div class="results">
+          <ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
     <h1 class="ranking-numbers">01</h1>
     <p>Above is the font for the ranking numbers</p>
   </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
   <script src="js/app.js"></script>
+    
 </html>

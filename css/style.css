@@ -57,8 +57,104 @@ h2 {
   font-size: 1.75rem;
 }
 
+
+/* ================= SEARCH BAR ============== */
+
+.container {
+  margin-top: 50px;
+}
+
+.wrapper {
+  margin: 0 auto;
+  background: #FFFDFA;
+  border-radius: 5px;
+  box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.15);
+  position: relative;
+  width: 50%;
+}
+
+input {
+  background-color: #FFFDFA;
+  width:100%;
+  border: none;
+  height: 50px;
+  border-radius: 5px;
+  padding: 0px 40px 0px 10px;
+  font-size: 18px;
+  box-shadow: 0px 1px 4px rgba(0,0,0,0.1);
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  position: absolute;
+  border: none;
+  background: none;
+  top: 0;
+  right: 0;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+  width: 50px;
+}
+
+button:focus {
+  outline: none;
+}
+
+button i {
+  width: 100%;
+  color: #6d7b98;
+  line-height: 50px;
+  font-size: 22px;
+}
+
+.results {
+  padding: 0px;
+}
+
+.results ul {margin: 0; padding: 0; }
+.results ul li {
+  list-style: none;
+  border-radius: 3px;
+  opacity: 0;
+  display: none;
+  padding: 8px 12px;
+  transition: all .2s linear;
+  border-top: 5px solid black;
+}
+
+
+.show .results ul li {
+  opacity: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 2px 30px;
+} 
+
+.results img {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-self: center;
+}
+
+.show .results {
+  padding: 10px;
+}
+
+.results ul li:hover {
+  background: lightslategray
+}
+
+
 /* ================= ANIMATIONS ============== */
-@keyframes fade-in {
+
+@keyframes fade-in { /*Header Animations*/
   0% {
     opacity: 0;
   }
@@ -67,3 +163,33 @@ h2 {
     opacity: 1;
   }
 }
+
+
+@-webkit-keyframes pulse {  /*Search Icon Animation*/
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+  }
+  70% {
+      -webkit-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+      -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+  }
+  70% {
+      -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+      box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
+}
+
+/* 
+animation: pulse 2s infinite; */
