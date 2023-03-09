@@ -1,6 +1,4 @@
-
-
-// ================= API ============== 
+// ================= API ==============
 // const client_id = process.env.CLIENT_ID;
 // const client_secret = process.env.CLIENT_SECRET;
 // let token = '';
@@ -21,15 +19,16 @@
 //   .then(function(data) {
 //     token = data.access_token;
 //   });
-// ================= SEARCH BAR ============== 
+// ================= SEARCH BAR ==============
 
 let searchable = [];
 
-const searchInput = document.getElementById('search')
-const searchWrapper = document.querySelector('.wrapper')
-const resultsWrapper = document.querySelector('.results')
+const searchInput = document.getElementById("search");
+const searchWrapper = document.querySelector(".wrapper");
+const resultsWrapper = document.querySelector(".results");
+const resultsList = document.querySelector(".results ul");
 
-searchInput.addEventListener('keyup', async (e) => {
+searchInput.addEventListener("keyup", async (e) => {
   let input = searchInput.value;
   if (input.length >= 3) {
     const response = await fetch(`/api/toptracks?query=${input}`);
@@ -46,23 +45,84 @@ searchInput.addEventListener('keyup', async (e) => {
   }
 });
 
+async function selectSong() {
+  const request = new Request("/song", {
+    method: "POST",
+    body: JSON.stringify({
+      albumImg: this.getAttribute("data-album-img"),
+      album: this.getAttribute("data-album-title"),
+      track: this.getAttribute("data-track-name"),
+      artist: this.getAttribute("data-artist"),
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const response = await fetch(request);
+  const data = await response.json();
+  console.log(data);
+}
+
+function createTrackItem(trackInfo) {
+  const song = document.createElement("li");
+  const albumImg = document.createElement("img");
+  const albumName = document.createElement("p");
+  const songAndArtist = document.createElement("p");
+  const songInfo = document.createElement("div");
+
+  albumImg.src = trackInfo.image;
+  albumImg.alt = trackInfo.name;
+  songInfo.classList.add("song-info");
+  songAndArtist.textContent = `${trackInfo.name} - ${trackInfo.artist}`;
+  albumName.textContent = trackInfo.album;
+
+  // Add data to song info div
+  songInfo.appendChild(songAndArtist);
+  songInfo.appendChild(albumName);
+
+  // Add all info to song li
+  song.appendChild(albumImg);
+  song.appendChild(songInfo);
+
+  // Add data attributes to li to pull via JS
+  song.setAttribute("data-album-img", trackInfo.image);
+  song.setAttribute("data-album-title", trackInfo.album);
+  song.setAttribute("data-track-name", trackInfo.name);
+  song.setAttribute("data-artist", trackInfo.artist);
+
+  song.addEventListener("click", selectSong);
+
+  // Add song li to search results list
+  resultsList.appendChild(song);
+}
+
 function renderResults(results) {
-    if (!results.length) {
-        return searchWrapper.classList.remove('show');
-    }
+  if (!results.length) {
+    return searchWrapper.classList.remove("show");
+  }
 
-    let content = results.map((item) => {
-        return `<li>
-            <img src="${item.image}" alt="${item.name}" />
-            <div> 
-                <p>${item.name} - ${item.artist}</p>
-                <p>${item.album}</p>
-            </div>
-        </li>`
-    }).join('')
+  // Clear current list before rendering new one
+  resultsList.innerHTML = "";
 
-    searchWrapper.classList.add('show')
-    resultsWrapper.innerHTML = `<ul>${content}</ul>`;
+  // let content = results
+  //   .map((item) => {
+  //     return `<li onclick="selectSong()">
+  //           <img src="${item.image}" alt="${item.name}" />
+  //           <div class="song-info">
+  //               <p>${item.name} - ${item.artist}</p>
+  //               <p>${item.album}</p>
+  //           </div>
+  //       </li>`;
+  //   })
+  //   .join("");
+
+  results.forEach((item) => {
+    createTrackItem(item);
+  });
+
+  searchWrapper.classList.add("show");
+  // resultsWrapper.innerHTML = `<ul>${content}</ul>`;
 }
 
 //==========================================================//
@@ -81,7 +141,7 @@ function renderResults(results) {
 //         .then(function(data) {
 //           results = data.tracks.items.map((item) => {
 //               return {
-//                   name: item.name, 
+//                   name: item.name,
 //                   artist: item.artists.map((artist) => artist.name),
 //                   album: item.album.name,
 //                   image: item.album.images[0].url
@@ -92,11 +152,8 @@ function renderResults(results) {
 //         })
 //   } else {
 //       renderResults(results);
-//   }   
+//   }
 // });
-
-
-
 
 // ========== Old way of calling API ==========
 // const client_id = process.env.CLIENT_ID;
