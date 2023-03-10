@@ -27,6 +27,7 @@ const searchInput = document.getElementById("search");
 const searchWrapper = document.querySelector(".wrapper");
 const resultsWrapper = document.querySelector(".results");
 const resultsList = document.querySelector(".results ul");
+const chosenSong = document.querySelector(".chosensong");
 
 searchInput.addEventListener("keyup", async (e) => {
   let input = searchInput.value;
@@ -40,13 +41,13 @@ searchInput.addEventListener("keyup", async (e) => {
       image: item.album.images[0].url,
     }));
     renderResults(results);
+    chosenSong.classList.add("no-display");
   } else {
     renderResults([]);
   }
 });
 
 async function setChosenSong(song) {
-  const chosenSong = document.querySelector(".chosensong");
   const response = await fetch("http://127.0.0.1:3000/all-songs");
   const allTracks = await response.json();
   const trackDetails = document.querySelector("#chosenSongDetails");
@@ -70,6 +71,7 @@ async function setChosenSong(song) {
   trackInfo.appendChild(titleArtist);
   trackInfo.appendChild(album);
 
+  //TODO: Factor this out to its own function
   // Find the rank of the selected song
   const songRank =
     allTracks.findIndex((track) => {
@@ -144,11 +146,10 @@ function createTrackItem(trackInfo) {
   return song;
 }
 
+// TODO: Finish making this actually display the chart
 async function displayChart() {
   const response = await fetch("http://127.0.0.1:3000/all-songs");
   const trackData = await response.json();
-
-  console.log(trackData);
 }
 
 function renderResults(results) {
