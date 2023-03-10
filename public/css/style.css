@@ -6,7 +6,9 @@
 }
 
 :root {
-  --color-faded-white: rgba(255, 255, 255, 0.6);
+  --album-img-size: 3.75rem;
+
+  --color-faded-white: rgba(255, 255, 255, 0.5);
   --color-primary: #ff2ad4;
   --color-secondary: #268bff;
   --color-tertiary: #0016ee;
@@ -177,12 +179,22 @@ button i {
   border-radius: var(--radius-header);
 }
 
+.chosensong,
+.ranking-module:first-of-type {
+  margin-top: 1rem;
+}
+
+.chosensong > div {
+  display: flex;
+  align-items: center;
+}
+
 .ranking-module:last-of-type {
   margin-bottom: 0;
 }
 
 .ranking-module {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: var(--color-faded-white);
 }
 
 .chosensong {
@@ -191,10 +203,22 @@ button i {
 
 .chosen-song-numbers {
   color: var(--color-secondary);
+  font-size: 2.5rem;
 }
 
 .ranking-module > .ranking-numbers {
   color: var(--color-tertiary);
+}
+
+.album-img {
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+  margin: 0 3.5rem;
+}
+
+/* ================= UTILITY CLASSES ============== */
+.no-display {
+  display: none;
 }
 
 /* ================= ANIMATIONS ============== */

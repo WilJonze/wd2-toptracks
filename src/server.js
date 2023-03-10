@@ -43,8 +43,20 @@ app.use(limiter);
 
 // ================= SONG RELATED ROUTES =================
 app.post("/song", (req, res) => {
-  const songInfo = getSongInfo(req.body);
-  res.send(songInfo);
+  db.getSongInfo(
+    req.body,
+    (result) => {
+      const queryResult = result[0];
+      res.send(queryResult);
+    },
+    res // pass res into function for use down the road
+  );
+});
+
+app.get("/all-songs", (req, res) => {
+  db.getAllSongs((result) => {
+    res.send(result);
+  });
 });
 
 //test route
