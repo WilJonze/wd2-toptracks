@@ -47,9 +47,21 @@ searchInput.addEventListener("keyup", async (e) => {
   }
 });
 
-async function setChosenSong(song) {
+async function getTrackRank(trackInfo) {
   const response = await fetch("http://127.0.0.1:3000/all-songs");
   const allTracks = await response.json();
+
+  return (
+    allTracks.findIndex((currentTrack) => {
+      return (
+        currentTrack.track === trackInfo.trackName &&
+        currentTrack.album === trackInfo.album
+      );
+    }) + 1
+  );
+}
+
+function setChosenSong(song) {
   const trackDetails = document.querySelector("#chosenSongDetails");
   searchInput.value = "";
   trackDetails.innerHTML = "";
@@ -71,16 +83,13 @@ async function setChosenSong(song) {
   trackInfo.appendChild(titleArtist);
   trackInfo.appendChild(album);
 
-  //TODO: Factor this out to its own function
   // Find the rank of the selected song
-  const songRank =
-    allTracks.findIndex((track) => {
-      return track.track === song.trackName && track.album === song.album;
-    }) + 1;
-
+  const trackRank = getTrackRank(song);
+  trackRank.then((data) => {
+    chosenRank.textContent = trackRank < 10 ? `0${data}` : data;
+  });
   searchWrapper.classList.remove("show");
   chosenSong.classList.remove("no-display");
-  chosenRank.textContent = songRank < 10 ? `0${songRank}` : songRank;
 
   trackDetails.appendChild(chosenRank);
   trackDetails.appendChild(albumImg);
@@ -113,36 +122,57 @@ async function selectSong() {
   setChosenSong(songObj);
 }
 
-function createTrackItem(trackInfo) {
-  const song = document.createElement("li");
+// TODO: This function is super long. Needs refactoring
+function createTrackItem(trackInfo, wrapperElem = "li", addedClasses = []) {
+  const song = document.createElement(wrapperElem);
   const albumImg = document.createElement("img");
   const albumName = document.createElement("p");
   const songAndArtist = document.createElement("p");
   const songInfo = document.createElement("div");
 
-  albumImg.src = trackInfo.image;
-  albumImg.alt = trackInfo.name;
+  let trackName = "";
+
+  if (trackInfo.hasOwnProperty("album_img_url")) {
+    albumImg.src = trackInfo.album_img_url;
+  } else {
+    albumImg.src = trackInfo.image;
+  }
+
+  if (trackInfo.hasOwnProperty("name")) {
+    trackName = trackInfo.name;
+  } else {
+    trackName = trackInfo.track;
+  }
+  albumImg.alt = trackName;
   songInfo.classList.add("song-info");
-  songAndArtist.textContent = `${trackInfo.name} - ${trackInfo.artist}`;
+  songAndArtist.textContent = `${trackName} - ${trackInfo.artist}`;
   albumName.textContent = trackInfo.album;
 
   // Add data to song info div
   songInfo.appendChild(songAndArtist);
   songInfo.appendChild(albumName);
 
-  // Add all info to song li
+  // Add all info to wrapperElem
   song.appendChild(albumImg);
   song.appendChild(songInfo);
 
-  // Add data attributes to li to pull via JS
+  // Add data attributes to wrapperElem to pull via JS
   song.setAttribute("data-album-img", trackInfo.image);
   song.setAttribute("data-album-title", trackInfo.album);
-  song.setAttribute("data-track-name", trackInfo.name);
+  song.setAttribute("data-track-name", trackName);
   song.setAttribute("data-artist", trackInfo.artist);
 
-  song.addEventListener("click", selectSong);
+  // Only adding this event listener to the li elements
+  // for the moment since they will be search results
+  if (wrapperElem === "li") {
+    song.addEventListener("click", selectSong);
+  }
 
-  // Add song li to search results list
+  // Add classes that were passed in to wrapper element
+  for (c of addedClasses) {
+    song.classList.add(c);
+  }
+
   return song;
 }
 
@@ -150,6 +180,28 @@ function createTrackItem(trackInfo) {
 async function displayChart() {
   const response = await fetch("http://127.0.0.1:3000/all-songs");
   const trackData = await response.json();
+  const chart = document.querySelector(".ranking-chart");
+  const chartClasses = ["ranking-module", "fade-in"];
+
+  let delay = 1;
+
+  for (let i = 0; i < trackData.length; i++) {
+    const newTrack = createTrackItem(trackData[i], "div", chartClasses);
+    const rank = document.createElement("h2");
+    rank.classList.add("ranking-numbers");
+    newTrack.style = `animation-delay: ${delay}s`;
+    delay += 0.1;
+
+    // trackData is sorted array returned by all-songs route
+    // add 1 to item index to get song rank
+    if (i + 1 < 10) {
+      rank.textContent = "0" + (i + 1);
+    } else {
+      rank.textContent = i + 1;
+    }
+    newTrack.prepend(rank); // Might be able to mix this into createTrackItem
+    chart.appendChild(newTrack);
+  }
 }
 
 function renderResults(results) {

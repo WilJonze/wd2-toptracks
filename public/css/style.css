@@ -195,6 +195,9 @@ button i {
 
 .ranking-module {
   background-color: var(--color-faded-white);
+  opacity: 0;
+  display: flex;
+  align-items: center;
 }
 
 .chosensong {
@@ -208,6 +211,18 @@ button i {
 
 .ranking-module > .ranking-numbers {
   color: var(--color-tertiary);
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ranking-module img {
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+  margin: 0 3.5rem;
 }
 
 .album-img {
@@ -219,6 +234,12 @@ button i {
 /* ================= UTILITY CLASSES ============== */
 .no-display {
   display: none;
+}
+
+.fade-in {
+  animation-name: fade-in;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
 }
 
 /* ================= ANIMATIONS ============== */
