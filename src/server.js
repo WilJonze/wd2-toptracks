@@ -1,22 +1,26 @@
 require("dotenv").config();
 
-const express = require("express")
+const express = require("express");
 const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 const app = express();
 const port = 3000;
 
-
 const toptracks = require("./toptracks");
+const db = require("./database");
+const getSongInfo = require("./database");
 
-app.use('/', express.static('public'))
-
+app.use("/", express.static("public"));
 
 app.use("/api/toptracks", toptracks);
 
 app.use(express.json());
 
-const whitelist = ["http://127.0.0.1", "http://127.0.0.1:5500"];
+const whitelist = [
+  "http://127.0.0.1",
+  "http://127.0.0.1:5500",
+  "http://127.0.0.1:3000",
+];
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || whitelist.indexOf(origin) !== -1) {
@@ -25,17 +29,35 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  optionsSuccessStatus: 200
-}
+  optionsSuccessStatus: 200,
+};
 
 app.use(cors(corsOptions));
 
 const limiter = rateLimit({
   windowMS: 1000,
-  max: 10
+  max: 10,
 });
 
 app.use(limiter);
+
+// ================= SONG RELATED ROUTES =================
+app.post("/song", (req, res) => {
+  db.getSongInfo(
+    req.body,
+    (result) => {
+      const queryResult = result[0];
+      res.send(queryResult);
+    },
+    res // pass res into function for use down the road
+  );
+});
+
+app.get("/all-songs", (req, res) => {
+  db.getAllSongs((result) => {
+    res.send(result);
+  });
+});
 
 //test route
 // app.get("/", (req, res) => res.json({ success: "Hello World"}));
