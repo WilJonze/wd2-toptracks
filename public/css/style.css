@@ -1,0 +1,286 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style-type: none;
+}
+
+:root {
+  --album-img-size: 3.75rem;
+
+  --color-faded-white: rgba(255, 255, 255, 0.5);
+  --color-primary: #ff2ad4;
+  --color-secondary: #268bff;
+  --color-tertiary: #0016ee;
+  --color-text: #fff;
+
+  --radius-header: 0.5rem;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(
+    to top,
+    var(--color-primary),
+    var(--color-secondary) /* var(--color-tertiary) */
+  );
+  max-width: 100vw;
+  min-height: 100vh;
+  padding: 0.5rem;
+  background-repeat: no-repeat;
+
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2 {
+  font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.ranking-numbers {
+  font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+}
+
+/* ============== HEADER STYLING ============== */
+.header {
+  background-color: var(--color-faded-white);
+  padding: 0.5rem;
+  /* margin: 0.5rem; */
+  color: var(--color-text);
+  border-radius: var(--radius-header);
+  text-align: center;
+}
+
+.main-heading {
+  font-size: 3rem;
+}
+
+.sub-heading {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+
+  font-size: 1.75rem;
+}
+
+/* ================= SEARCH BAR ============== */
+
+.container {
+  margin-top: 50px;
+}
+
+.wrapper {
+  margin: 0 auto;
+  background: #fffdfa;
+  border-radius: 5px;
+  box-shadow: 0px 1px 5px 3px rgba(0, 0, 0, 0.15);
+  position: relative;
+  width: 50%;
+}
+
+input {
+  background-color: #fffdfa;
+  width: 100%;
+  border: none;
+  height: 50px;
+  border-radius: 5px;
+  padding: 0px 40px 0px 10px;
+  font-size: 18px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  position: absolute;
+  border: none;
+  background: none;
+  top: 0;
+  right: 0;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+  width: 50px;
+}
+
+button:focus {
+  outline: none;
+}
+
+button i {
+  width: 100%;
+  color: #6d7b98;
+  line-height: 50px;
+  font-size: 22px;
+}
+
+.results {
+  padding: 0px;
+}
+
+.results ul {
+  margin: 0;
+  padding: 0;
+}
+.results ul li {
+  list-style: none;
+  border-radius: 3px;
+  opacity: 0;
+  display: none;
+  padding: 8px 12px;
+  transition: all 0.2s linear;
+  border-top: 5px solid black;
+}
+
+.show .results ul li {
+  opacity: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  cursor: pointer;
+  gap: 2px 30px;
+}
+
+.show .results ul li p {
+  pointer-events: none;
+}
+
+.results img {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-self: center;
+}
+
+.show .results {
+  padding: 10px;
+}
+
+.results ul li:hover {
+  background: lightslategray;
+}
+
+.song-info p:first-of-type {
+  margin-bottom: 0.5rem;
+}
+
+/* ================= LAYOUT ============== */
+.chosensong,
+.ranking-module {
+  /* margin: 0.5rem; */
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-header);
+}
+
+.chosensong,
+.ranking-module:first-of-type {
+  margin-top: 1rem;
+}
+
+.chosensong > div {
+  display: flex;
+  align-items: center;
+}
+
+.ranking-module:last-of-type {
+  margin-bottom: 0;
+}
+
+.ranking-module {
+  background-color: var(--color-faded-white);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+}
+
+.chosensong {
+  background-color: var(--color-text);
+}
+
+.chosen-song-numbers {
+  color: var(--color-secondary);
+  font-size: 2.5rem;
+}
+
+.ranking-module > .ranking-numbers {
+  color: var(--color-tertiary);
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ranking-module img {
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+  margin: 0 3.5rem;
+}
+
+.album-img {
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+  margin: 0 3.5rem;
+}
+
+/* ================= UTILITY CLASSES ============== */
+.no-display {
+  display: none;
+}
+
+.fade-in {
+  animation-name: fade-in;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+/* ================= ANIMATIONS ============== */
+
+@keyframes fade-in {
+  /*Header Animations*/
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes pulse {
+  /*Search Icon Animation*/
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.4);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.4);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.4);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+  }
+}
+
+/*
+animation: pulse 2s infinite; */
