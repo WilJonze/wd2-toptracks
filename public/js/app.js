@@ -86,7 +86,7 @@ function setChosenSong(song) {
   // Find the rank of the selected song
   const trackRank = getTrackRank(song);
   trackRank.then((data) => {
-    chosenRank.textContent = trackRank < 10 ? `0${data}` : data;
+    chosenRank.textContent = data < 10 ? `0${data}` : data;
   });
   searchWrapper.classList.remove("show");
   chosenSong.classList.remove("no-display");
