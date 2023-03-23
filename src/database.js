@@ -2,12 +2,7 @@ const mysql = require("mysql2");
 const dataColumns = "artist, album, album_img_url, track, upvotes, downvotes";
 
 // ============ DATABASE FUNCTIONALITY ==================
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: process.env.MYSQL_USERNAME,
-  password: process.env.MYSQL_PWORD,
-  database: "top_tracks_dev",
-});
+const connection = mysql.createConnection(process.env.DATABASE_URL);
 
 connection.connect((err) => {
   if (err) throw err;
