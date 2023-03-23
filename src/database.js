@@ -2,7 +2,16 @@ const mysql = require("mysql2");
 const dataColumns = "artist, album, album_img_url, track, upvotes, downvotes";
 
 // ============ DATABASE FUNCTIONALITY ==================
+<<<<<<< Updated upstream
 const connection = mysql.createConnection(process.env.DATABASE_URL);
+=======
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_PWORD,
+  database: "top-tracks-data",
+});
+>>>>>>> Stashed changes
 
 connection.connect((err) => {
   if (err) throw err;
