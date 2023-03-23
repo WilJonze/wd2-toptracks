@@ -49,7 +49,7 @@ searchInput.addEventListener("keyup", async (e) => {
 
 // Will create upvote/downvote buttons within the element
 // passed into the function
-function createVoteButtons(element) {
+function createVoteButtons(element, trackData = null) {
   const voteContainer = document.createElement("div");
   voteContainer.setAttribute("id", "vote-container");
 
@@ -61,8 +61,8 @@ function createVoteButtons(element) {
   const downvoteDiv = document.createElement("div");
   const iconUpvote = document.createElement("i");
   const iconDownvote = document.createElement("i");
-  
-  let songCount = 0;
+
+  let songCount = trackData.upvotes - trackData.downvotes;
 
   btnUpvote.classList.add("btn-upvote");
   iconUpvote.classList.add("fa", "fa-solid", "fa-arrow-up", "arrow-up");
@@ -72,9 +72,7 @@ function createVoteButtons(element) {
   likeCount.setAttribute("id", "count-element");
   likeCount.textContent = songCount;
 
-  function decrement() {
-   
-  }
+  function decrement() {}
 
   btnDownvote.classList.add("btn-downvote");
   iconDownvote.classList.add("fa", "fa-solid", "fa-arrow-down", "arrow-down");
@@ -89,20 +87,20 @@ function createVoteButtons(element) {
 
   iconUpvote.addEventListener("click", (e) => {
     e.target.disabled = true;
-    e.target.parentElement.querySelector(".btn-downvote").disabled = true;
+    // e.target.parentElement.querySelector(".btn-downvote").disabled = true;
     castVote("like", e.target.parentElement.getAttribute("data-song-id"));
     songCount++;
+    console.log("SONG:", trackData);
     likeCount.textContent = songCount;
-    console.log(songCount)
-
+    console.log(songCount);
   });
   btnDownvote.addEventListener("click", (e) => {
     e.target.disabled = true;
-    e.target.parentElement.querySelector(".btn-upvote").disabled = true;
+    // e.target.parentElement.querySelector(".btn-upvote").disabled = true;
     castVote("dislike", e.target.parentElement.getAttribute("data-song-id"));
     songCount--;
     likeCount.textContent = songCount;
-    console.log(songCount)
+    console.log(songCount);
   });
 
   voteContainer.appendChild(btnUpvote);
@@ -167,7 +165,7 @@ function setChosenSong(song) {
   trackDetails.appendChild(chosenRank);
   trackDetails.appendChild(albumImg);
   trackDetails.appendChild(trackInfo);
-  createVoteButtons(trackDetails);
+  createVoteButtons(trackDetails, song);
 }
 
 async function selectSong() {
@@ -273,8 +271,9 @@ async function displayChart() {
     } else {
       rank.textContent = i + 1;
     }
+
     newTrack.prepend(rank); // Might be able to mix this into createTrackItem
-    createVoteButtons(newTrack);
+    createVoteButtons(newTrack, trackData[i]);
     chart.appendChild(newTrack);
   }
 }
@@ -287,13 +286,11 @@ function renderResults(results) {
   // Clear current list before rendering new one
   resultsList.innerHTML = "";
 
-
   results.forEach((item) => {
     resultsList.appendChild(createTrackItem(item));
   });
 
   searchWrapper.classList.add("show");
- 
 }
 
 displayChart();
