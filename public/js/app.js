@@ -60,10 +60,12 @@ function createVoteButtons(element) {
 
   btnUpvote.addEventListener("click", (e) => {
     e.target.disabled = true;
+    e.target.parentElement.querySelector(".btn-downvote").disabled = true;
     castVote("like", e.target.parentElement.getAttribute("data-song-id"));
   });
   btnDownvote.addEventListener("click", (e) => {
     e.target.disabled = true;
+    e.target.parentElement.querySelector(".btn-upvote").disabled = true;
     castVote("dislike", e.target.parentElement.getAttribute("data-song-id"));
   });
 
