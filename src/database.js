@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
-const dataColumns = "artist, album, album_img_url, track, upvotes, downvotes";
+const dataColumns =
+  "id, artist, album, album_img_url, track, upvotes, downvotes";
 
 // ============ DATABASE FUNCTIONALITY ==================
 const connection = mysql.createConnection(process.env.DATABASE_URL);
@@ -19,6 +20,29 @@ function createSongRecord(song, response = null) {
       response.write("New song added to list!");
       response.send();
     }
+  });
+}
+
+function updateVotes(songID, vote, response = null) {
+  let voteField = vote === "like" ? "upvotes" : "downvotes";
+  let initialQuery = `SELECT ${voteField} FROM tracks WHERE id=${songID}`;
+
+  connection.query(initialQuery, (err, result) => {
+    let currentVotes =
+      vote === "like" ? result[0].upvotes : result[0].downvotes;
+    let updateQuery = `UPDATE tracks SET ${voteField}=${
+      currentVotes + 1
+    } WHERE id=${songID}`;
+
+    connection.query(updateQuery, (err, result) => {
+      if (!err) {
+        response.status(200).send("Vote cast!");
+      } else {
+        response
+          .status(500)
+          .send(`Something went wrong on our end! Try again.`);
+      }
+    });
   });
 }
 
@@ -55,4 +79,4 @@ function getAllSongs(callback) {
   });
 }
 
-module.exports = { getSongInfo, getAllSongs };
+module.exports = { getSongInfo, getAllSongs, updateVotes };
