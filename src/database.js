@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
-const dataColumns =
-  "id, artist, album, album_img_url, track, upvotes, downvotes";
+const dataColumns = "artist, album, album_img_url, track, upvotes, downvotes";
 
 // ============ DATABASE FUNCTIONALITY ==================
 const connection = mysql.createConnection(process.env.DATABASE_URL);
@@ -55,7 +54,7 @@ function escapeQuotes(string) {
 function getSongInfo(song, callback, response = null) {
   const escapedTrackName = escapeQuotes(song.trackName);
   const escapedArtist = escapeQuotes(song.artist);
-  const query = `SELECT ${dataColumns} FROM tracks WHERE track = '${escapedTrackName}' AND artist = '${escapedArtist}'`;
+  const query = `SELECT id, ${dataColumns} FROM tracks WHERE track = '${escapedTrackName}' AND artist = '${escapedArtist}'`;
 
   connection.query(query, (err, result) => {
     if (err) throw err;
@@ -72,7 +71,7 @@ function getSongInfo(song, callback, response = null) {
 }
 
 function getAllSongs(callback) {
-  const query = `SELECT ${dataColumns} FROM tracks ORDER BY (upvotes - downvotes) DESC`;
+  const query = `SELECT id, ${dataColumns} FROM tracks ORDER BY (upvotes - downvotes) DESC`;
 
   connection.query(query, (err, result) => {
     return callback(result);
