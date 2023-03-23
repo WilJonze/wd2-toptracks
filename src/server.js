@@ -17,6 +17,7 @@ app.use("/api/toptracks", toptracks);
 app.use(express.json());
 
 const whitelist = [
+  "127.0.0.1",
   "http://127.0.0.1",
   "http://127.0.0.1:5500",
   "http://127.0.0.1:3000",
@@ -57,6 +58,15 @@ app.get("/all-songs", (req, res) => {
   db.getAllSongs((result) => {
     res.send(result);
   });
+});
+
+app.get("/vote/:vote", (req, res) => {
+  if (!whitelist.includes(req.hostname)) {
+    res.send("Not Authorized.");
+  } else {
+    const [vote, songID] = req.params.vote.split(":");
+    db.updateVotes(songID, vote, res);
+  }
 });
 
 //test route

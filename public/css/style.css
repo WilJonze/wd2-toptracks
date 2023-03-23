@@ -166,6 +166,10 @@ button i {
   background: lightslategray;
 }
 
+.song-info {
+  width: 25%;
+}
+
 .song-info p:first-of-type {
   margin-bottom: 0.5rem;
 }
@@ -229,6 +233,20 @@ button i {
   width: var(--album-img-size);
   height: var(--album-img-size);
   margin: 0 3.5rem;
+}
+
+.btn-upvote,
+.btn-downvote {
+  position: relative;
+  height: initial;
+  width: initial;
+  margin-left: 2rem;
+  border-radius: var(--radius-header);
+  border: 1px solid var(--color-secondary);
+  padding: 0.5rem;
+  cursor: pointer;
+
+  font-size: 2rem;
 }
 
 /* ================= UTILITY CLASSES ============== */
