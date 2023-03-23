@@ -62,7 +62,7 @@ function createVoteButtons(element, trackData = null) {
   const iconUpvote = document.createElement("i");
   const iconDownvote = document.createElement("i");
 
-  let songCount = trackData.upvotes - trackData.downvotes;
+  let songCount = trackData.upvotes - trackData.downvotes || 0;
 
   btnUpvote.classList.add("btn-upvote");
   iconUpvote.classList.add("fa", "fa-solid", "fa-arrow-up", "arrow-up");
@@ -88,16 +88,25 @@ function createVoteButtons(element, trackData = null) {
   iconUpvote.addEventListener("click", (e) => {
     e.target.disabled = true;
     // e.target.parentElement.querySelector(".btn-downvote").disabled = true;
-    castVote("like", e.target.parentElement.getAttribute("data-song-id"));
+    castVote(
+      "like",
+      e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
+        "data-song-id"
+      )
+    );
     songCount++;
-    console.log("SONG:", trackData);
     likeCount.textContent = songCount;
     console.log(songCount);
   });
-  btnDownvote.addEventListener("click", (e) => {
+  iconDownvote.addEventListener("click", (e) => {
     e.target.disabled = true;
     // e.target.parentElement.querySelector(".btn-upvote").disabled = true;
-    castVote("dislike", e.target.parentElement.getAttribute("data-song-id"));
+    castVote(
+      "dislike",
+      e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
+        "data-song-id"
+      )
+    );
     songCount--;
     likeCount.textContent = songCount;
     console.log(songCount);
