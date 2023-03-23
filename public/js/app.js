@@ -50,13 +50,35 @@ searchInput.addEventListener("keyup", async (e) => {
 // Will create upvote/downvote buttons within the element
 // passed into the function
 function createVoteButtons(element) {
+  const voteContainer = document.createElement("div");
+  voteContainer.setAttribute("id", "vote-container");
+
   const btnUpvote = document.createElement("button");
   const btnDownvote = document.createElement("button");
+  const likeCount = document.createElement("span");
+  const voteColumn = document.createElement("div");
+  const upvoteDiv = document.createElement("div");
+  const downvoteDiv = document.createElement("div");
+  const iconUpvote = document.createElement("i");
+  const iconDownvote = document.createElement("i");
 
   btnUpvote.classList.add("btn-upvote");
-  btnUpvote.textContent = "LIKE";
+  iconUpvote.classList.add("fa", "fa-solid", "fa-arrow-up", "arrow-up");
+  upvoteDiv.style.display = "block";
+
+  likeCount.classList.add("like-count");
+  likeCount.textContent="0";
+
   btnDownvote.classList.add("btn-downvote");
-  btnDownvote.textContent = "DISLIKE";
+  iconDownvote.classList.add("fa", "fa-solid", "fa-arrow-down", "arrow-down");
+  downvoteDiv.style.display = "block";
+
+  upvoteDiv.appendChild(iconUpvote);
+  downvoteDiv.appendChild(iconDownvote);
+  voteColumn.appendChild(upvoteDiv);
+  voteColumn.appendChild(likeCount);
+  voteColumn.appendChild(downvoteDiv);
+  voteContainer.appendChild(voteColumn);
 
   btnUpvote.addEventListener("click", (e) => {
     e.target.disabled = true;
@@ -69,8 +91,9 @@ function createVoteButtons(element) {
     castVote("dislike", e.target.parentElement.getAttribute("data-song-id"));
   });
 
-  element.appendChild(btnUpvote);
-  element.appendChild(btnDownvote);
+  voteContainer.appendChild(btnUpvote);
+  voteContainer.appendChild(btnDownvote);
+  element.appendChild(voteContainer);
 }
 
 async function castVote(vote, songID) {
@@ -250,76 +273,13 @@ function renderResults(results) {
   // Clear current list before rendering new one
   resultsList.innerHTML = "";
 
-  // let content = results
-  //   .map((item) => {
-  //     return `<li onclick="selectSong()">
-  //           <img src="${item.image}" alt="${item.name}" />
-  //           <div class="song-info">
-  //               <p>${item.name} - ${item.artist}</p>
-  //               <p>${item.album}</p>
-  //           </div>
-  //       </li>`;
-  //   })
-  //   .join("");
 
   results.forEach((item) => {
     resultsList.appendChild(createTrackItem(item));
   });
 
   searchWrapper.classList.add("show");
-  // resultsWrapper.innerHTML = `<ul>${content}</ul>`;
+ 
 }
-
-//==========================================================//
-// searchInput.addEventListener('keyup', (e) => {
-//   let results = [];
-//   let input = searchInput.value;
-//   if (input.length >= 3) {
-//       fetch(`https://api.spotify.com/v1/search?q=${input}&type=track&limit=10`, {
-//           headers: {
-//             'Authorization': 'Bearer ' + token
-//           }
-//         })
-//         .then(function(response) {
-//           return response.json();
-//         })
-//         .then(function(data) {
-//           results = data.tracks.items.map((item) => {
-//               return {
-//                   name: item.name,
-//                   artist: item.artists.map((artist) => artist.name),
-//                   album: item.album.name,
-//                   image: item.album.images[0].url
-
-//               }
-//           });
-//           renderResults(results);
-//         })
-//   } else {
-//       renderResults(results);
-//   }
-// });
-
-// ========== Old way of calling API ==========
-// const client_id = process.env.CLIENT_ID;
-// const client_secret = process.env.CLIENT_SECRET;
-// let token = '';
-
-// let authOptions = {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded',
-//     'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-//   },
-//   body: 'grant_type=client_credentials'
-// };
-
-// fetch('https://accounts.spotify.com/api/token', authOptions)
-//   .then(function(response) {
-//     return response.json();
-//   })
-//   .then(function(data) {
-//     token = data.access_token;
-//   });
 
 displayChart();
