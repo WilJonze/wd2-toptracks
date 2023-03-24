@@ -92,6 +92,15 @@ h2 {
 
 .ranking-module {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.uparrow, .downarrow {
+  width: 39px;
+  height: 30px;
+  overflow: hidden;
 }
 
 /* ================= ANIMATIONS ============== */
