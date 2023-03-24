@@ -1,24 +1,3 @@
-// ================= API ==============
-// const client_id = process.env.CLIENT_ID;
-// const client_secret = process.env.CLIENT_SECRET;
-// let token = '';
-
-// let authOptions = {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded',
-//     'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-//   },
-//   body: 'grant_type=client_credentials'
-// };
-
-// fetch('https://accounts.spotify.com/api/token', authOptions)
-//   .then(function(response) {
-//     return response.json();
-//   })
-//   .then(function(data) {
-//     token = data.access_token;
-//   });
 // ================= SEARCH BAR ==============
 
 let searchable = [];
@@ -72,8 +51,6 @@ function createVoteButtons(element, trackData = null) {
   likeCount.setAttribute("id", "count-element");
   likeCount.textContent = songCount;
 
-  function decrement() {}
-
   btnDownvote.classList.add("btn-downvote");
   iconDownvote.classList.add("fa", "fa-solid", "fa-arrow-down", "arrow-down");
   downvoteDiv.style.display = "block";
@@ -85,31 +62,88 @@ function createVoteButtons(element, trackData = null) {
   voteColumn.appendChild(downvoteDiv);
   voteContainer.appendChild(voteColumn);
 
+  let hasVoted = false;
+
+  // Event listeners for upvote/downvote buttons, that record the vote, change arrow color,
+  // and disable the button that was clicked to prevent multiple votes.
   iconUpvote.addEventListener("click", (e) => {
-    e.target.disabled = true;
-    // e.target.parentElement.querySelector(".btn-downvote").disabled = true;
-    castVote(
-      "like",
-      e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
-        "data-song-id"
-      )
-    );
-    songCount++;
-    likeCount.textContent = songCount;
-    console.log(songCount);
+    if (btnDownvote.disabled) {
+      btnUpvote.disabled = false;
+      return;
+    }
+
+    if (!hasVoted) {
+      e.target.disabled = true;
+      btnDownvote.disabled = true;
+      e.target.style.color = "darkorange";
+
+      castVote(
+        "like",
+        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
+          "data-song-id"
+        )
+      );
+      songCount++;
+      likeCount.textContent = songCount;
+      console.log(songCount);
+      hasVoted = true;
+    } else {
+      e.target.disabled = false;
+      btnDownvote.disabled = false;
+      e.target.style.color = "";
+
+      castVote(
+        "undo-like",
+        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
+          "data-song-id"
+        )
+      );
+
+      songCount--;
+      likeCount.textContent = songCount;
+      console.log(songCount);
+      hasVoted = false;
+    }
   });
+
   iconDownvote.addEventListener("click", (e) => {
-    e.target.disabled = true;
-    // e.target.parentElement.querySelector(".btn-upvote").disabled = true;
-    castVote(
-      "dislike",
-      e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
-        "data-song-id"
-      )
-    );
-    songCount--;
-    likeCount.textContent = songCount;
-    console.log(songCount);
+    if (btnUpvote.disabled) {
+      btnDownvote.disabled = false;
+      return;
+    }
+
+    if (!hasVoted) {
+      e.target.disabled = true;
+      btnUpvote.disabled = true;
+      e.target.style.color = "darkred";
+
+      castVote(
+        "dislike",
+        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
+          "data-song-id"
+        )
+      );
+      songCount--;
+      likeCount.textContent = songCount;
+      hasVoted = true;
+      console.log(songCount);
+    } else {
+      e.target.disabled = false;
+      btnUpvote.disabled = false;
+      e.target.style.color = "";
+
+      castVote(
+        "undo-dislike",
+        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
+          "data-song-id"
+        )
+      );
+
+      songCount++;
+      likeCount.textContent = songCount;
+      hasVoted = false;
+      console.log(songCount);
+    }
   });
 
   voteContainer.appendChild(btnUpvote);
