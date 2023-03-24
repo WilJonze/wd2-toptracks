@@ -97,25 +97,31 @@ h2 {
   align-items: center;
 }
 
-.upvote, .downvote {
+.upvote {
   background: url(/images/UpvoteandDownvoteicons.png) no-repeat;
   display: block;
   width: 38px;
-  height: 30px;
+  height: 31px;
   overflow: hidden;
   text-indent: 9999px;
 }
 
 .downvote {
-  background-position: -40px 0;
+  background: url(/images/UpvoteandDownvoteicons.png) no-repeat;
+  display: block;
+  width: 40px;
+  height: 32px;
+  overflow: hidden;
+  text-indent: 9999px;
+  background-position: -38px 0;
 }
 
 .upvote:hover, .upvote:focus {
-  background-position: 0 -40px;
+  background-position: 0 -39px;
 }
 
 .downvote:hover, .downvote:focus {
-  background-position: -40px -40px;
+  background-position: -38px -39px;
 }
 
 /* ================= ANIMATIONS ============== */
