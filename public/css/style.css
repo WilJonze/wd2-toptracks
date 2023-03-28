@@ -8,8 +8,11 @@
 :root {
   --album-img-size: 3.75rem;
 
+  --color-btn-vote-default: rgb(0, 0, 0);
   --color-faded-white: rgba(255, 255, 255, 0.5);
   --color-primary: #ff2ad4;
+  --color-selected-downvote: red;
+  --color-selected-upvote: springgreen;
   --color-secondary: #268bff;
   --color-tertiary: #0016ee;
   --color-text: #fff;
@@ -265,22 +268,35 @@ input:focus {
   font-size: 20px;
   font-weight: bold;
   margin-left: 0.5rem;
-  
 }
 
-.arrow-up {
-  color: black;
-  margin-left: 0.5rem;
-}
-
+.arrow-up,
 .arrow-down {
-  color: black;
+  cursor: pointer;
   margin-left: 0.5rem;
+  color: var(--color-btn-vote-default);
+}
+
+.selected {
+  -webkit-text-stroke: 1px var(--color-btn-vote-default);
+}
+
+.arrow-up.selected {
+  color: var(--color-selected-upvote);
+}
+
+.arrow-down.selected {
+  color: var(--color-selected-downvote);
 }
 
 .arrow-up:hover,
 .arrow-down:hover {
-  color: darkslategrey
+  color: darkslategrey;
+}
+
+.arrow-up.disabled,
+.arrow-down.disabled {
+  cursor: not-allowed;
 }
 
 .arrow-up:active {
@@ -290,7 +306,6 @@ input:focus {
 .arrow-down:active {
   color: red;
 }
-
 
 /* ================= UTILITY CLASSES ============== */
 .no-display {

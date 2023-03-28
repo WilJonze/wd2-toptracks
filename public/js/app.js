@@ -26,6 +26,8 @@ searchInput.addEventListener("keyup", async (e) => {
   }
 });
 
+function checkVoteList(trackID) {}
+
 // Will create upvote/downvote buttons within the element
 // passed into the function
 function createVoteButtons(element, trackData = null) {
@@ -40,6 +42,7 @@ function createVoteButtons(element, trackData = null) {
   const downvoteDiv = document.createElement("div");
   const iconUpvote = document.createElement("i");
   const iconDownvote = document.createElement("i");
+  const trackID = trackData.id;
 
   let songCount = trackData.upvotes - trackData.downvotes || 0;
 
@@ -62,87 +65,54 @@ function createVoteButtons(element, trackData = null) {
   voteColumn.appendChild(downvoteDiv);
   voteContainer.appendChild(voteColumn);
 
-  let hasVoted = false;
-
   // Event listeners for upvote/downvote buttons, that record the vote, change arrow color,
   // and disable the button that was clicked to prevent multiple votes.
   iconUpvote.addEventListener("click", (e) => {
-    if (btnDownvote.disabled) {
-      btnUpvote.disabled = false;
-      return;
-    }
+    if (!e.target.classList.contains("selected")) {
+      e.target.classList.add("selected");
 
-    if (!hasVoted) {
-      e.target.disabled = true;
-      btnDownvote.disabled = true;
-      e.target.style.color = "darkorange";
+      // Remove styling from downvote if it's actively set when upvoting
+      if (iconDownvote.classList.contains("selected")) {
+        iconDownvote.classList.remove("selected");
+        songCount += 2;
+      } else {
+        songCount++;
+      }
 
-      castVote(
-        "like",
-        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
-          "data-song-id"
-        )
-      );
-      songCount++;
+      castVote("like", trackID);
       likeCount.textContent = songCount;
-      console.log(songCount);
-      hasVoted = true;
     } else {
-      e.target.disabled = false;
-      btnDownvote.disabled = false;
-      e.target.style.color = "";
+      e.target.classList.remove("selected");
 
-      castVote(
-        "undo-like",
-        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
-          "data-song-id"
-        )
-      );
+      castVote("dislike", trackID);
 
       songCount--;
       likeCount.textContent = songCount;
-      console.log(songCount);
-      hasVoted = false;
     }
   });
 
   iconDownvote.addEventListener("click", (e) => {
-    if (btnUpvote.disabled) {
-      btnDownvote.disabled = false;
-      return;
-    }
+    if (!e.target.classList.contains("selected")) {
+      e.target.classList.add("selected");
 
-    if (!hasVoted) {
-      e.target.disabled = true;
-      btnUpvote.disabled = true;
-      e.target.style.color = "darkred";
+      if (iconUpvote.classList.contains("selected")) {
+        iconUpvote.classList.remove("selected");
+        songCount -= 2;
+      } else {
+        songCount--;
+      }
 
-      castVote(
-        "dislike",
-        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
-          "data-song-id"
-        )
-      );
-      songCount--;
+      castVote("dislike", trackID);
+
       likeCount.textContent = songCount;
-      hasVoted = true;
-      console.log(songCount);
     } else {
-      e.target.disabled = false;
-      btnUpvote.disabled = false;
-      e.target.style.color = "";
+      e.target.classList.remove("selected");
+      iconUpvote.classList.remove("selected");
 
-      castVote(
-        "undo-dislike",
-        e.target.parentElement.parentElement.parentElement.parentElement.getAttribute(
-          "data-song-id"
-        )
-      );
+      castVote("like", trackID);
 
       songCount++;
       likeCount.textContent = songCount;
-      hasVoted = false;
-      console.log(songCount);
     }
   });
 
@@ -153,7 +123,6 @@ function createVoteButtons(element, trackData = null) {
 
 async function castVote(vote, songID) {
   const response = await fetch(`http://127.0.0.1:3000/vote/${vote}:${songID}`);
-  const data = await response.json();
 }
 
 async function getTrackRank(trackInfo) {
