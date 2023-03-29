@@ -26,7 +26,48 @@ searchInput.addEventListener("keyup", async (e) => {
   }
 });
 
-function checkVoteList(trackID) {}
+function processVoteHistory(
+  trackID,
+  vote = null,
+  buttons = null,
+  trackParentElem = null
+) {
+  const history = JSON.parse(localStorage.getItem("voteHistory"));
+  console.log(history);
+
+  const voteIndex = history.findIndex((item) => {
+    return Object.keys(item).indexOf(trackID.toString()) === 0;
+  });
+
+  // If index < 0, song isn't in vote history. Add it.
+  if (vote !== null && voteIndex < 0) {
+    const voteData = {};
+    voteData[trackID] = vote;
+    history.push(voteData);
+  } else if (!vote && !buttons) {
+    // Remove the song from vote history when de-selecting a vote
+    history.splice(voteIndex, 1);
+  } else if (voteIndex >= 0 && vote !== null) {
+    history[voteIndex][trackID] = vote;
+  }
+
+  // This function gets called when creating the track items
+  // It will automatically select the correct vote arrow
+  // when loaded
+  if (buttons) {
+    if (voteIndex >= 0) {
+      trackParentElem.setAttribute("data-pv", true);
+      if (history[voteIndex][trackID] === "U") {
+        buttons[0].classList.add("selected");
+      } else {
+        buttons[1].classList.add("selected");
+      }
+    }
+  }
+
+  console.log(history);
+  localStorage.setItem("voteHistory", JSON.stringify(history));
+}
 
 // Will create upvote/downvote buttons within the element
 // passed into the function
@@ -42,7 +83,8 @@ function createVoteButtons(element, trackData = null) {
   const downvoteDiv = document.createElement("div");
   const iconUpvote = document.createElement("i");
   const iconDownvote = document.createElement("i");
-  const trackID = trackData.id;
+  const trackID = trackData.id || element.getAttribute("data-song-id");
+  console.log("Track ID:", trackID);
 
   let songCount = trackData.upvotes - trackData.downvotes || 0;
 
@@ -75,14 +117,18 @@ function createVoteButtons(element, trackData = null) {
       if (iconDownvote.classList.contains("selected")) {
         iconDownvote.classList.remove("selected");
         songCount += 2;
+        if (element.getAttribute("data-pv") === "true")
+          castVote("like", trackID);
       } else {
         songCount++;
       }
 
       castVote("like", trackID);
+      processVoteHistory(trackID, "U");
       likeCount.textContent = songCount;
     } else {
       e.target.classList.remove("selected");
+      processVoteHistory(trackID);
 
       castVote("dislike", trackID);
 
@@ -97,12 +143,15 @@ function createVoteButtons(element, trackData = null) {
 
       if (iconUpvote.classList.contains("selected")) {
         iconUpvote.classList.remove("selected");
+        if (element.getAttribute("data-pv") === "true")
+          castVote("dislike", trackID);
         songCount -= 2;
       } else {
         songCount--;
       }
 
       castVote("dislike", trackID);
+      processVoteHistory(trackID, "D");
 
       likeCount.textContent = songCount;
     } else {
@@ -110,12 +159,15 @@ function createVoteButtons(element, trackData = null) {
       iconUpvote.classList.remove("selected");
 
       castVote("like", trackID);
+      processVoteHistory(trackID);
 
       songCount++;
       likeCount.textContent = songCount;
     }
   });
 
+  // Pass everything in to allow it to be selected (if it is) when the song loads in the chart
+  processVoteHistory(trackID, null, [iconUpvote, iconDownvote], element);
   voteContainer.appendChild(btnUpvote);
   voteContainer.appendChild(btnDownvote);
   element.appendChild(voteContainer);
@@ -141,7 +193,7 @@ async function getTrackRank(trackInfo) {
   const chosenSongField = document.querySelector("#chosenSongDetails");
   chosenSongField.setAttribute("data-song-id", allTracks[rank].id);
 
-  return rank + 1;
+  return { songRank: rank + 1, songDetails: allTracks[rank] };
 }
 
 function setChosenSong(song) {
@@ -169,7 +221,9 @@ function setChosenSong(song) {
   // Find the rank of the selected song
   const trackRank = getTrackRank(song);
   trackRank.then((data) => {
-    chosenRank.textContent = data < 10 ? `0${data}` : data;
+    chosenRank.textContent =
+      data.songRank < 10 ? `0${data.songRank}` : data.songRank;
+    createVoteButtons(trackDetails, data.songDetails);
   });
   searchWrapper.classList.remove("show");
   chosenSong.classList.remove("no-display");
@@ -177,7 +231,6 @@ function setChosenSong(song) {
   trackDetails.appendChild(chosenRank);
   trackDetails.appendChild(albumImg);
   trackDetails.appendChild(trackInfo);
-  createVoteButtons(trackDetails, song);
 }
 
 async function selectSong() {
@@ -242,7 +295,7 @@ function createTrackItem(trackInfo, wrapperElem = "li", addedClasses = []) {
 
   // Add data attributes to wrapperElem to pull via JS
   song.setAttribute("data-song-id", trackInfo.id);
-  song.setAttribute("data-album-img", trackInfo.image);
+  song.setAttribute("data-album-img", trackInfo.album_img_url);
   song.setAttribute("data-album-title", trackInfo.album);
   song.setAttribute("data-track-name", trackName);
   song.setAttribute("data-artist", trackInfo.artist);
@@ -305,4 +358,13 @@ function renderResults(results) {
   searchWrapper.classList.add("show");
 }
 
-displayChart();
+function initializeVoteHistory() {
+  if (!localStorage.getItem("voteHistory")) {
+    localStorage.setItem("voteHistory", JSON.stringify([]));
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  initializeVoteHistory();
+  displayChart();
+});
