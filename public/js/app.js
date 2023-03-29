@@ -72,7 +72,7 @@ function createVoteButtons(element) {
   iconUpvote.addEventListener("click", (e) => {
     if (btnDownvote.disabled) {
       btnUpvote.disabled = false;
-      //return;
+      return;
     }
 
     if (!hasVoted) {
@@ -89,7 +89,7 @@ function createVoteButtons(element) {
     songCount++;
     likeCount.textContent = songCount;
     console.log(songCount)
-    hasVoted = true;
+    hasVoted = false;
       } else {
        e.target.disabled = false;
        btnDownvote.disabled = false;
@@ -106,13 +106,14 @@ function createVoteButtons(element) {
         likeCount.textContent = songCount;
         console.log(songCount)
         hasVoted = false;
+        
        }
 });
 
 iconDownvote.addEventListener("click", (e) => {
   if (btnUpvote.disabled) {
     btnDownvote.disabled = false;
-    //return;
+    return;
   }
 
   if (!hasVoted) {
