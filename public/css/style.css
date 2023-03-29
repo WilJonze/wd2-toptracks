@@ -285,11 +285,11 @@ input:focus {
 
 .arrow-up:hover,
 .arrow-down:hover {
-  color: darkslategrey
+  color: var(--color-primary);
 }
 
 .arrow-up:active {
-  color: orange;
+  color: var(--color-secondary);
 }
 
 .arrow-down:active {

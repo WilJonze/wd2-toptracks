@@ -78,7 +78,7 @@ function createVoteButtons(element) {
     if (!hasVoted) {
     e.target.disabled = true;
     btnDownvote.disabled = true;
-    e.target.style.color = "darkorange";
+    e.target.style.color = "#268bff";
     
     castVote(
       "like",
@@ -119,7 +119,7 @@ iconDownvote.addEventListener("click", (e) => {
   if (!hasVoted) {
   e.target.disabled = true;
   btnUpvote.disabled = true;
-  e.target.style.color = "darkred";
+  e.target.style.color = "orange";
 
   castVote(
     "dislike",
