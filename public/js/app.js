@@ -225,25 +225,35 @@ function setChosenSong(song, data = null) {
   trackInfo.appendChild(titleArtist);
   trackInfo.appendChild(album);
 
+  trackDetails.appendChild(createNewSongLabel());
+  searchWrapper.classList.remove("show");
+  chosenSong.classList.remove("no-display");
+
+  const newSongLabel = document.querySelector(".new-song-label");
+  if (data === "New song added to list!") {
+    newSongLabel.classList.add("fade-in");
+    chosenRank.textContent = "";
+  }
+
   // Find the rank of the selected song
   const trackRank = getTrackRank(song);
   trackRank.then((data) => {
     chosenRank.textContent =
       data.songRank < 10 ? `0${data.songRank}` : data.songRank;
     createVoteButtons(trackDetails, data.songDetails);
+    const iconUpvote = trackDetails.querySelector(".arrow-up");
+    const iconDownvote = trackDetails.querySelector(".arrow-down");
+    processVoteHistory(
+      data.songDetails.id,
+      null,
+      [iconUpvote, iconDownvote],
+      trackDetails
+    );
   });
-  searchWrapper.classList.remove("show");
-  chosenSong.classList.remove("no-display");
 
   trackDetails.appendChild(chosenRank);
   trackDetails.appendChild(albumImg);
   trackDetails.appendChild(trackInfo);
-  trackDetails.appendChild(createNewSongLabel());
-
-  const newSongLabel = document.querySelector(".new-song-label");
-  if (data === "New song added to list!") {
-    newSongLabel.classList.add("fade-in");
-  }
 }
 
 async function selectSong() {

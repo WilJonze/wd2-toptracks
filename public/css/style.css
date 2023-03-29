@@ -57,9 +57,9 @@ h2 {
 
 /* ============== HEADER STYLING ============== */
 .header {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--color-faded-white);
   padding: 0.5rem;
-  color: whitesmoke;
+  color: var(--color-tertiary);
   border-radius: var(--radius-header);
   text-align: center;
 }
@@ -233,17 +233,19 @@ input:focus {
   font-size: xxx-large;
 }
 
+.album-img,
 .ranking-module img {
   width: var(--album-img-size);
   height: var(--album-img-size);
   margin: 0 3.5rem;
+  border-radius: var(--radius-header);
 }
 
-.album-img {
+/* .album-img {
   width: var(--album-img-size);
   height: var(--album-img-size);
   margin: 0 3.5rem;
-}
+} */
 
 .btn-upvote,
 .btn-downvote {
@@ -331,6 +333,7 @@ input:focus {
   padding: 1rem;
   position: absolute;
   top: -50%;
+  left: 4.5rem;
   transform: rotate(-20deg);
   opacity: 0;
 
@@ -338,6 +341,11 @@ input:focus {
   font-size: 1.5rem;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+/* Show only the top 100 tracks */
+.ranking-module:nth-of-type(1n + 101) {
+  display: none;
 }
 
 /* ================= UTILITY CLASSES ============== */
