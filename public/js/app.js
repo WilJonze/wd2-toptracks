@@ -72,7 +72,7 @@ function createVoteButtons(element) {
   iconUpvote.addEventListener("click", (e) => {
     if (btnDownvote.disabled) {
       btnUpvote.disabled = false;
-      return;
+      //return;
     }
 
     if (!hasVoted) {
@@ -112,7 +112,7 @@ function createVoteButtons(element) {
 iconDownvote.addEventListener("click", (e) => {
   if (btnUpvote.disabled) {
     btnDownvote.disabled = false;
-    return;
+    //return;
   }
 
   if (!hasVoted) {
