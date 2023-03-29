@@ -7,6 +7,7 @@
 
 :root {
   --album-img-size: 7.5rem;
+  --album-img-size-mobile: 15rem;
 
   --color-btn-vote-default: rgb(0, 0, 0);
   --color-faded-white: rgba(255, 255, 255, 0.5);
@@ -186,11 +187,16 @@ input:focus {
 }
 
 .song-info {
-  width: 25%;
+  width: 50%;
+  font-size: 1.3rem;
 }
 
 .song-info p:first-of-type {
   margin-bottom: 0.5rem;
+}
+
+.song-info p:last-of-type {
+  font-weight: bold;
 }
 
 /* ================= LAYOUT ============== */
@@ -222,6 +228,7 @@ input:focus {
   opacity: 0;
   display: flex;
   align-items: center;
+  justify-content: space-around;
 }
 
 .chosensong {
@@ -240,12 +247,6 @@ input:focus {
   margin: 0 3.5rem;
   border-radius: var(--radius-header);
 }
-
-/* .album-img {
-  width: var(--album-img-size);
-  height: var(--album-img-size);
-  margin: 0 3.5rem;
-} */
 
 .btn-upvote,
 .btn-downvote {
@@ -284,9 +285,13 @@ input:focus {
 .arrow-down {
   cursor: pointer;
   margin-left: 0.5rem;
-  color: var(--color-btn-vote-default);
+}
 
-  font-size: 1.3rem;
+.arrow-up,
+.arrow-down,
+.like-count {
+  color: var(--color-tertiary);
+  font-size: 1.5rem;
 }
 
 .selected {
@@ -346,6 +351,71 @@ input:focus {
 /* Show only the top 100 tracks */
 .ranking-module:nth-of-type(1n + 101) {
   display: none;
+}
+
+@media screen and (max-width: 960px) {
+  .wrapper {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .chosenSong,
+  #chosenSongDetails {
+    display: flex;
+  }
+
+  .wrapper {
+    width: 100%;
+  }
+
+  .ranking-module,
+  .chosenSong,
+  #chosenSongDetails {
+    flex-direction: column;
+  }
+
+  .ranking-module {
+    border: 0.1rem solid var(--color-tertiary);
+    box-shadow: 0 0.2rem 0 0 var(--color-tertiary);
+  }
+
+  .album-img,
+  .ranking-module img {
+    display: block;
+    margin-bottom: 2rem;
+    height: var(--album-img-size-mobile);
+    width: var(--album-img-size-mobile);
+  }
+
+  .song-info {
+    width: 100%;
+    text-align: center;
+  }
+
+  #vote-container > div {
+    display: flex;
+    justify-content: space-between;
+    width: 150%;
+  }
+
+  #vote-container > div div,
+  #vote-container > div span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #vote-container > div span {
+    margin-top: 0.75rem;
+  }
+
+  .arrow-up,
+  .arrow-down,
+  .like-count {
+    font-size: 2.5rem;
+    margin: 1rem 0;
+  }
 }
 
 /* ================= UTILITY CLASSES ============== */
