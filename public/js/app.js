@@ -119,7 +119,7 @@ iconDownvote.addEventListener("click", (e) => {
   if (!hasVoted) {
   e.target.disabled = true;
   btnUpvote.disabled = true;
-  e.target.style.color = "orange";
+  e.target.style.color = "red";
 
   castVote(
     "dislike",
