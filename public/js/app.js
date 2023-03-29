@@ -33,7 +33,6 @@ function processVoteHistory(
   trackParentElem = null
 ) {
   const history = JSON.parse(localStorage.getItem("voteHistory"));
-  console.log(history);
 
   const voteIndex = history.findIndex((item) => {
     return Object.keys(item).indexOf(trackID.toString()) === 0;
@@ -65,7 +64,6 @@ function processVoteHistory(
     }
   }
 
-  console.log(history);
   localStorage.setItem("voteHistory", JSON.stringify(history));
 }
 
@@ -84,7 +82,6 @@ function createVoteButtons(element, trackData = null) {
   const iconUpvote = document.createElement("i");
   const iconDownvote = document.createElement("i");
   const trackID = trackData.id || element.getAttribute("data-song-id");
-  console.log("Track ID:", trackID);
 
   let songCount = trackData.upvotes - trackData.downvotes || 0;
 
@@ -196,7 +193,16 @@ async function getTrackRank(trackInfo) {
   return { songRank: rank + 1, songDetails: allTracks[rank] };
 }
 
-function setChosenSong(song) {
+function createNewSongLabel() {
+  const label = document.createElement("div");
+
+  label.classList.add("new-song-label");
+  label.textContent = "New Song Added!";
+
+  return label;
+}
+
+function setChosenSong(song, data = null) {
   const trackDetails = document.querySelector("#chosenSongDetails");
   searchInput.value = "";
   trackDetails.innerHTML = "";
@@ -215,6 +221,7 @@ function setChosenSong(song) {
   titleArtist.textContent = `${song.trackName} — ${song.artist}`;
   album.textContent = song.album;
 
+  trackInfo.classList.add("song-info");
   trackInfo.appendChild(titleArtist);
   trackInfo.appendChild(album);
 
@@ -231,6 +238,12 @@ function setChosenSong(song) {
   trackDetails.appendChild(chosenRank);
   trackDetails.appendChild(albumImg);
   trackDetails.appendChild(trackInfo);
+  trackDetails.appendChild(createNewSongLabel());
+
+  const newSongLabel = document.querySelector(".new-song-label");
+  if (data === "New song added to list!") {
+    newSongLabel.classList.add("fade-in");
+  }
 }
 
 async function selectSong() {
@@ -256,7 +269,7 @@ async function selectSong() {
   // but it's an error regardless. Need to fix that
   // Quieted with catch.
 
-  setChosenSong(songObj);
+  setChosenSong(songObj, data);
 }
 
 // TODO: This function is super long. Needs refactoring
@@ -294,8 +307,13 @@ function createTrackItem(trackInfo, wrapperElem = "li", addedClasses = []) {
   song.appendChild(songInfo);
 
   // Add data attributes to wrapperElem to pull via JS
-  song.setAttribute("data-song-id", trackInfo.id);
-  song.setAttribute("data-album-img", trackInfo.album_img_url);
+  if (wrapperElem !== "li") {
+    song.setAttribute("data-song-id", trackInfo.id);
+  }
+  song.setAttribute(
+    "data-album-img",
+    trackInfo.album_img_url || trackInfo.image
+  );
   song.setAttribute("data-album-title", trackInfo.album);
   song.setAttribute("data-track-name", trackName);
   song.setAttribute("data-artist", trackInfo.artist);

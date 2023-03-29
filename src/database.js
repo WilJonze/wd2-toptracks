@@ -16,7 +16,7 @@ function createSongRecord(song, response = null) {
 
     if (response) {
       response.status(200);
-      response.write("New song added to list!");
+      response.json("New song added to list!");
       response.send();
     }
   });

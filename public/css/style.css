@@ -6,7 +6,7 @@
 }
 
 :root {
-  --album-img-size: 3.75rem;
+  --album-img-size: 7.5rem;
 
   --color-btn-vote-default: rgb(0, 0, 0);
   --color-faded-white: rgba(255, 255, 255, 0.5);
@@ -43,7 +43,16 @@ h2 {
 }
 
 .ranking-numbers {
+  color: var(--color-tertiary);
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+  font-size: xxx-large;
 }
 
 /* ============== HEADER STYLING ============== */
@@ -188,6 +197,7 @@ input:focus {
 .chosensong,
 .ranking-module {
   /* margin: 0.5rem; */
+  position: relative;
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-radius: var(--radius-header);
@@ -220,17 +230,7 @@ input:focus {
 
 .chosen-song-numbers {
   color: var(--color-secondary);
-  font-size: 2.5rem;
-}
-
-.ranking-module > .ranking-numbers {
-  color: var(--color-tertiary);
-  width: var(--album-img-size);
-  height: var(--album-img-size);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: xxx-large;
 }
 
 .ranking-module img {
@@ -315,6 +315,29 @@ input:focus {
 
 .arrow-down:active {
   color: red;
+}
+
+.new-song-label {
+  height: 10rem;
+  width: 10rem;
+  border-radius: 50%;
+  color: var(--color-text);
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem;
+  position: absolute;
+  top: -50%;
+  transform: rotate(-20deg);
+  opacity: 0;
+
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 /* ================= UTILITY CLASSES ============== */
