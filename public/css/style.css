@@ -6,7 +6,7 @@
 }
 
 :root {
-  --album-img-size: 3.75rem;
+  --album-img-size: 7.5rem;
 
   --color-faded-white: rgba(255, 255, 255, 0.5);
   --color-primary: #ff2ad4;
@@ -41,13 +41,15 @@ h2 {
 
 .ranking-numbers {
   font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+  font-size: xxx-large;
+  letter-spacing: .25rem;
 }
 
 /* ============== HEADER STYLING ============== */
 .header {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--color-faded-white);
   padding: 0.5rem;
-  color: whitesmoke;
+  color: var(--color-tertiary);
   border-radius: var(--radius-header);
   text-align: center;
 }
@@ -174,7 +176,7 @@ input:focus {
 }
 
 .song-info {
-  width: 25%;
+  width: 50%;
 }
 
 .song-info p:first-of-type {
@@ -197,6 +199,7 @@ input:focus {
 
 .chosensong > div {
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -208,6 +211,7 @@ input:focus {
   background-color: var(--color-faded-white);
   opacity: 0;
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -217,7 +221,7 @@ input:focus {
 
 .chosen-song-numbers {
   color: var(--color-secondary);
-  font-size: 2.5rem;
+  font-size: xxx-large;
 }
 
 .ranking-module > .ranking-numbers {
@@ -244,7 +248,7 @@ input:focus {
 
 .btn-upvote,
 .btn-downvote {
-  color: black;
+  color: var(--color-tertiary);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -263,18 +267,19 @@ input:focus {
 
 .like-count {
   font-size: 20px;
+  color: var(--color-tertiary);
   font-weight: bold;
   margin-left: 0.5rem;
   
 }
 
 .arrow-up {
-  color: black;
+  color: var(--color-tertiary);
   margin-left: 0.5rem;
 }
 
 .arrow-down {
-  color: black;
+  color: var(--color-tertiary);
   margin-left: 0.5rem;
 }
 
