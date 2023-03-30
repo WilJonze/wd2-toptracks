@@ -344,7 +344,7 @@ input:focus {
   padding: 1rem;
   position: absolute;
   top: -50%;
-  left: 4.5rem;
+  left: 10%;
   transform: rotate(-20deg);
   opacity: 0;
   pointer-events: none;
