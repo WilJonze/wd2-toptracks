@@ -200,6 +200,12 @@ input:focus {
 }
 
 /* ================= LAYOUT ============== */
+.chosenSong,
+#chosenSongDetails {
+  display: flex;
+  justify-content: space-around;
+}
+
 .chosensong,
 .ranking-module {
   /* margin: 0.5rem; */
@@ -308,7 +314,7 @@ input:focus {
 
 .arrow-up:hover,
 .arrow-down:hover {
-  color: darkslategrey;
+  color: var(--color-primary);
 }
 
 .arrow-up.disabled,
@@ -341,6 +347,7 @@ input:focus {
   left: 4.5rem;
   transform: rotate(-20deg);
   opacity: 0;
+  pointer-events: none;
 
   text-align: center;
   font-size: 1.5rem;
@@ -353,18 +360,22 @@ input:focus {
   display: none;
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (min-width: 601px) and (max-width: 960px) {
   .wrapper {
     width: 80%;
+  }
+
+  .new-song-label {
+    height: 7.5rem;
+    width: 7.5rem;
+    top: -30px;
+    left: 5rem;
+
+    font-size: 1.25rem;
   }
 }
 
 @media screen and (max-width: 600px) {
-  .chosenSong,
-  #chosenSongDetails {
-    display: flex;
-  }
-
   .wrapper {
     width: 100%;
   }
@@ -373,6 +384,11 @@ input:focus {
   .chosenSong,
   #chosenSongDetails {
     flex-direction: column;
+  }
+
+  .chosen-song-numbers,
+  .ranking-numbers {
+    font-size: 5rem;
   }
 
   .ranking-module {
@@ -415,6 +431,14 @@ input:focus {
   .like-count {
     font-size: 2.5rem;
     margin: 1rem 0;
+  }
+
+  .new-song-label {
+    top: 75px;
+    left: 1rem;
+    height: 7.5rem;
+    width: 7.5rem;
+    font-size: 1.25rem;
   }
 }
 
