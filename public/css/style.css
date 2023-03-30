@@ -32,11 +32,20 @@ body {
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
 }
 
-h1,
+h1 {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: .08rem;
+}
+
 h2 {
   font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
+  letter-spacing: .08rem;
 }
 
 .ranking-numbers {
@@ -190,6 +199,7 @@ input:focus {
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-radius: var(--radius-header);
+  font-weight: 600;
 }
 
 .chosensong,
@@ -350,3 +360,138 @@ input:focus {
 
 /*
 animation: pulse 2s infinite; */
+
+/*
+===============================================================
+Media Queries
+===============================================================
+*/
+
+@media only screen and (max-width: 768px) {
+  
+  .ranking-module img {
+    width: 4rem;
+    height: auto;
+    margin: 0 1rem;
+  }
+  
+  .album-img {
+    width: 4rem;
+    height: auto;
+    margin: 0 1rem;
+  }
+
+  .chosen-song-numbers {
+    color: var(--color-secondary);
+    font-size: .15rem;
+  }
+
+  .song-info {
+    width: 50%;
+    font-size: .75rem;
+  }
+  
+  h1, h2 {
+    font-size: xxx-small;
+  }
+
+  .ranking-numbers {
+    font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+    font-size: 2rem;
+    letter-spacing: .25rem;
+  }
+  
+}
+
+@media only screen and (max-width: 360px) {
+
+  .song-info {
+    width: 50%;
+    font-size: .5rem;
+  }
+  
+  h1, h2 {
+    font-size: xxx-small;
+  }
+
+  .ranking-module {
+    background-color: var(--color-faded-white);
+    opacity: 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .ranking-module img {
+    width: 3.5rem;
+    height: auto;
+    margin: 0 .5rem;
+  }
+  
+  .album-img {
+    width: 3.5rem;
+    height: auto;
+    margin: 0 .5rem;
+  }
+
+  .chosen-song-numbers {
+    color: var(--color-secondary);
+    font-size: .05rem;
+  }
+
+  .ranking-numbers {
+    font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+    font-size: .5;
+    margin: 0 .05rem;
+  }
+
+  .like-count {
+    font-size: 1rem;
+  }
+  
+  .btn-upvote, .btn-downvote {
+    width: .25rem;
+    height: auto;
+  }
+
+
+}
+
+/*@media only screen and (min-width: 250px ) {
+  .ranking-numbers {
+    font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+    font-size: .5;
+    letter-spacing: .25rem;
+  }
+
+  .song-info {
+    width: 50%;
+    font-size: .5rem;
+  }
+  
+  h1, h2 {
+    font-size: xxx-small;
+  }
+
+  .ranking-module img {
+    width: 3.5rem;
+    height: auto;
+    margin: 0 .5rem;
+  }
+  
+  .album-img {
+    width: 3.5rem;
+    height: auto;
+    margin: 0 .5rem;
+  }
+
+  .like-count {
+    font-size: 1rem;
+  }
+
+  .btn-upvote, .btn-downvote {
+    width: .5rem;
+    height: auto;
+  }
+
+} */
