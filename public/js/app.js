@@ -1,24 +1,3 @@
-// ================= API ==============
-// const client_id = process.env.CLIENT_ID;
-// const client_secret = process.env.CLIENT_SECRET;
-// let token = '';
-
-// let authOptions = {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded',
-//     'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-//   },
-//   body: 'grant_type=client_credentials'
-// };
-
-// fetch('https://accounts.spotify.com/api/token', authOptions)
-//   .then(function(response) {
-//     return response.json();
-//   })
-//   .then(function(data) {
-//     token = data.access_token;
-//   });
 // ================= SEARCH BAR ==============
 
 let searchable = [];
@@ -47,35 +26,152 @@ searchInput.addEventListener("keyup", async (e) => {
   }
 });
 
+function processVoteHistory(
+  trackID,
+  vote = null,
+  buttons = null,
+  trackParentElem = null
+) {
+  const history = JSON.parse(localStorage.getItem("voteHistory"));
+
+  const voteIndex = history.findIndex((item) => {
+    return Object.keys(item).indexOf(trackID.toString()) === 0;
+  });
+
+  // If index < 0, song isn't in vote history. Add it.
+  if (vote !== null && voteIndex < 0) {
+    const voteData = {};
+    voteData[trackID] = vote;
+    history.push(voteData);
+  } else if (!vote && !buttons) {
+    // Remove the song from vote history when de-selecting a vote
+    history.splice(voteIndex, 1);
+  } else if (voteIndex >= 0 && vote !== null) {
+    history[voteIndex][trackID] = vote;
+  }
+
+  // This function gets called when creating the track items
+  // It will automatically select the correct vote arrow
+  // when loaded
+  if (buttons) {
+    if (voteIndex >= 0) {
+      trackParentElem.setAttribute("data-pv", true);
+      if (history[voteIndex][trackID] === "U") {
+        buttons[0].classList.add("selected");
+      } else {
+        buttons[1].classList.add("selected");
+      }
+    }
+  }
+
+  localStorage.setItem("voteHistory", JSON.stringify(history));
+}
+
 // Will create upvote/downvote buttons within the element
 // passed into the function
-function createVoteButtons(element) {
+function createVoteButtons(element, trackData = null) {
+  const voteContainer = document.createElement("div");
+  voteContainer.setAttribute("id", "vote-container");
+
   const btnUpvote = document.createElement("button");
   const btnDownvote = document.createElement("button");
+  const likeCount = document.createElement("span");
+  const voteColumn = document.createElement("div");
+  const upvoteDiv = document.createElement("div");
+  const downvoteDiv = document.createElement("div");
+  const iconUpvote = document.createElement("i");
+  const iconDownvote = document.createElement("i");
+  const trackID = trackData.id || element.getAttribute("data-song-id");
+
+  let songCount = trackData.upvotes - trackData.downvotes || 0;
 
   btnUpvote.classList.add("btn-upvote");
-  btnUpvote.textContent = "LIKE";
+  iconUpvote.classList.add("fa", "fa-solid", "fa-arrow-up", "arrow-up");
+  upvoteDiv.style.display = "block";
+
+  likeCount.classList.add("like-count");
+  likeCount.setAttribute("id", "count-element");
+  likeCount.textContent = songCount;
+
   btnDownvote.classList.add("btn-downvote");
-  btnDownvote.textContent = "DISLIKE";
+  iconDownvote.classList.add("fa", "fa-solid", "fa-arrow-down", "arrow-down");
+  downvoteDiv.style.display = "block";
 
-  btnUpvote.addEventListener("click", (e) => {
-    e.target.disabled = true;
-    e.target.parentElement.querySelector(".btn-downvote").disabled = true;
-    castVote("like", e.target.parentElement.getAttribute("data-song-id"));
-  });
-  btnDownvote.addEventListener("click", (e) => {
-    e.target.disabled = true;
-    e.target.parentElement.querySelector(".btn-upvote").disabled = true;
-    castVote("dislike", e.target.parentElement.getAttribute("data-song-id"));
+  upvoteDiv.appendChild(iconUpvote);
+  downvoteDiv.appendChild(iconDownvote);
+  voteColumn.appendChild(upvoteDiv);
+  voteColumn.appendChild(likeCount);
+  voteColumn.appendChild(downvoteDiv);
+  voteContainer.appendChild(voteColumn);
+
+  // Event listeners for upvote/downvote buttons, that record the vote, change arrow color,
+  // and disable the button that was clicked to prevent multiple votes.
+  iconUpvote.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("selected")) {
+      e.target.classList.add("selected");
+
+      // Remove styling from downvote if it's actively set when upvoting
+      if (iconDownvote.classList.contains("selected")) {
+        iconDownvote.classList.remove("selected");
+        songCount += 2;
+        if (element.getAttribute("data-pv") === "true")
+          castVote("like", trackID);
+      } else {
+        songCount++;
+      }
+
+      castVote("like", trackID);
+      processVoteHistory(trackID, "U");
+      likeCount.textContent = songCount;
+    } else {
+      e.target.classList.remove("selected");
+      processVoteHistory(trackID);
+
+      castVote("dislike", trackID);
+
+      songCount--;
+      likeCount.textContent = songCount;
+    }
   });
 
-  element.appendChild(btnUpvote);
-  element.appendChild(btnDownvote);
+  iconDownvote.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("selected")) {
+      e.target.classList.add("selected");
+
+      if (iconUpvote.classList.contains("selected")) {
+        iconUpvote.classList.remove("selected");
+        if (element.getAttribute("data-pv") === "true")
+          castVote("dislike", trackID);
+        songCount -= 2;
+      } else {
+        songCount--;
+      }
+
+      castVote("dislike", trackID);
+      processVoteHistory(trackID, "D");
+
+      likeCount.textContent = songCount;
+    } else {
+      e.target.classList.remove("selected");
+      iconUpvote.classList.remove("selected");
+
+      castVote("like", trackID);
+      processVoteHistory(trackID);
+
+      songCount++;
+      likeCount.textContent = songCount;
+    }
+  });
+
+  // Pass everything in to allow it to be selected (if it is) when the song loads in the chart
+  processVoteHistory(trackID, null, [iconUpvote, iconDownvote], element);
+  voteContainer.appendChild(btnUpvote);
+  voteContainer.appendChild(btnDownvote);
+  element.appendChild(voteContainer);
 }
 
 async function castVote(vote, songID) {
   const response = await fetch(`http://127.0.0.1:3000/vote/${vote}:${songID}`);
-  const data = await response.json();
 }
 
 async function getTrackRank(trackInfo) {
@@ -94,10 +190,19 @@ async function getTrackRank(trackInfo) {
   const chosenSongField = document.querySelector("#chosenSongDetails");
   chosenSongField.setAttribute("data-song-id", allTracks[rank].id);
 
-  return rank + 1;
+  return { songRank: rank + 1, songDetails: allTracks[rank] };
 }
 
-function setChosenSong(song) {
+function createNewSongLabel() {
+  const label = document.createElement("div");
+
+  label.classList.add("new-song-label");
+  label.textContent = "New Song Added!";
+
+  return label;
+}
+
+function setChosenSong(song, data = null) {
   const trackDetails = document.querySelector("#chosenSongDetails");
   searchInput.value = "";
   trackDetails.innerHTML = "";
@@ -116,21 +221,39 @@ function setChosenSong(song) {
   titleArtist.textContent = `${song.trackName} — ${song.artist}`;
   album.textContent = song.album;
 
+  trackInfo.classList.add("song-info");
   trackInfo.appendChild(titleArtist);
   trackInfo.appendChild(album);
+
+  trackDetails.appendChild(createNewSongLabel());
+  searchWrapper.classList.remove("show");
+  chosenSong.classList.remove("no-display");
+
+  const newSongLabel = document.querySelector(".new-song-label");
+  if (data === "New song added to list!") {
+    newSongLabel.classList.add("fade-in");
+    chosenRank.textContent = "";
+  }
 
   // Find the rank of the selected song
   const trackRank = getTrackRank(song);
   trackRank.then((data) => {
-    chosenRank.textContent = data < 10 ? `0${data}` : data;
+    chosenRank.textContent =
+      data.songRank < 10 ? `0${data.songRank}` : data.songRank;
+    createVoteButtons(trackDetails, data.songDetails);
+    const iconUpvote = trackDetails.querySelector(".arrow-up");
+    const iconDownvote = trackDetails.querySelector(".arrow-down");
+    processVoteHistory(
+      data.songDetails.id,
+      null,
+      [iconUpvote, iconDownvote],
+      trackDetails
+    );
   });
-  searchWrapper.classList.remove("show");
-  chosenSong.classList.remove("no-display");
 
   trackDetails.appendChild(chosenRank);
   trackDetails.appendChild(albumImg);
   trackDetails.appendChild(trackInfo);
-  createVoteButtons(trackDetails);
 }
 
 async function selectSong() {
@@ -156,7 +279,7 @@ async function selectSong() {
   // but it's an error regardless. Need to fix that
   // Quieted with catch.
 
-  setChosenSong(songObj);
+  setChosenSong(songObj, data);
 }
 
 // TODO: This function is super long. Needs refactoring
@@ -194,8 +317,13 @@ function createTrackItem(trackInfo, wrapperElem = "li", addedClasses = []) {
   song.appendChild(songInfo);
 
   // Add data attributes to wrapperElem to pull via JS
-  song.setAttribute("data-song-id", trackInfo.id);
-  song.setAttribute("data-album-img", trackInfo.image);
+  if (wrapperElem !== "li") {
+    song.setAttribute("data-song-id", trackInfo.id);
+  }
+  song.setAttribute(
+    "data-album-img",
+    trackInfo.album_img_url || trackInfo.image
+  );
   song.setAttribute("data-album-title", trackInfo.album);
   song.setAttribute("data-track-name", trackName);
   song.setAttribute("data-artist", trackInfo.artist);
@@ -236,8 +364,9 @@ async function displayChart() {
     } else {
       rank.textContent = i + 1;
     }
+
     newTrack.prepend(rank); // Might be able to mix this into createTrackItem
-    createVoteButtons(newTrack);
+    createVoteButtons(newTrack, trackData[i]);
     chart.appendChild(newTrack);
   }
 }
@@ -250,76 +379,20 @@ function renderResults(results) {
   // Clear current list before rendering new one
   resultsList.innerHTML = "";
 
-  // let content = results
-  //   .map((item) => {
-  //     return `<li onclick="selectSong()">
-  //           <img src="${item.image}" alt="${item.name}" />
-  //           <div class="song-info">
-  //               <p>${item.name} - ${item.artist}</p>
-  //               <p>${item.album}</p>
-  //           </div>
-  //       </li>`;
-  //   })
-  //   .join("");
-
   results.forEach((item) => {
     resultsList.appendChild(createTrackItem(item));
   });
 
   searchWrapper.classList.add("show");
-  // resultsWrapper.innerHTML = `<ul>${content}</ul>`;
 }
 
-//==========================================================//
-// searchInput.addEventListener('keyup', (e) => {
-//   let results = [];
-//   let input = searchInput.value;
-//   if (input.length >= 3) {
-//       fetch(`https://api.spotify.com/v1/search?q=${input}&type=track&limit=10`, {
-//           headers: {
-//             'Authorization': 'Bearer ' + token
-//           }
-//         })
-//         .then(function(response) {
-//           return response.json();
-//         })
-//         .then(function(data) {
-//           results = data.tracks.items.map((item) => {
-//               return {
-//                   name: item.name,
-//                   artist: item.artists.map((artist) => artist.name),
-//                   album: item.album.name,
-//                   image: item.album.images[0].url
+function initializeVoteHistory() {
+  if (!localStorage.getItem("voteHistory")) {
+    localStorage.setItem("voteHistory", JSON.stringify([]));
+  }
+}
 
-//               }
-//           });
-//           renderResults(results);
-//         })
-//   } else {
-//       renderResults(results);
-//   }
-// });
-
-// ========== Old way of calling API ==========
-// const client_id = process.env.CLIENT_ID;
-// const client_secret = process.env.CLIENT_SECRET;
-// let token = '';
-
-// let authOptions = {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded',
-//     'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-//   },
-//   body: 'grant_type=client_credentials'
-// };
-
-// fetch('https://accounts.spotify.com/api/token', authOptions)
-//   .then(function(response) {
-//     return response.json();
-//   })
-//   .then(function(data) {
-//     token = data.access_token;
-//   });
-
-displayChart();
+window.addEventListener("DOMContentLoaded", () => {
+  initializeVoteHistory();
+  displayChart();
+});
