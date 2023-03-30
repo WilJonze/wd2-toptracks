@@ -6,10 +6,14 @@
 }
 
 :root {
-  --album-img-size: 3.75rem;
+  --album-img-size: 7.5rem;
+  --album-img-size-mobile: 15rem;
 
+  --color-btn-vote-default: rgb(0, 0, 0);
   --color-faded-white: rgba(255, 255, 255, 0.5);
   --color-primary: #ff2ad4;
+  --color-selected-downvote: red;
+  --color-selected-upvote: springgreen;
   --color-secondary: #268bff;
   --color-tertiary: #0016ee;
   --color-text: #fff;
@@ -40,14 +44,23 @@ h2 {
 }
 
 .ranking-numbers {
+  color: var(--color-tertiary);
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
+  font-size: xxx-large;
 }
 
 /* ============== HEADER STYLING ============== */
 .header {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--color-faded-white);
   padding: 0.5rem;
-  color: whitesmoke;
+  color: var(--color-tertiary);
   border-radius: var(--radius-header);
   text-align: center;
 }
@@ -174,17 +187,29 @@ input:focus {
 }
 
 .song-info {
-  width: 25%;
+  width: 50%;
+  font-size: 1.3rem;
 }
 
 .song-info p:first-of-type {
   margin-bottom: 0.5rem;
 }
 
+.song-info p:last-of-type {
+  font-weight: bold;
+}
+
 /* ================= LAYOUT ============== */
+.chosenSong,
+#chosenSongDetails {
+  display: flex;
+  justify-content: space-around;
+}
+
 .chosensong,
 .ranking-module {
   /* margin: 0.5rem; */
+  position: relative;
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-radius: var(--radius-header);
@@ -209,6 +234,7 @@ input:focus {
   opacity: 0;
   display: flex;
   align-items: center;
+  justify-content: space-around;
 }
 
 .chosensong {
@@ -217,29 +243,15 @@ input:focus {
 
 .chosen-song-numbers {
   color: var(--color-secondary);
-  font-size: 2.5rem;
+  font-size: xxx-large;
 }
 
-.ranking-module > .ranking-numbers {
-  color: var(--color-tertiary);
-  width: var(--album-img-size);
-  height: var(--album-img-size);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+.album-img,
 .ranking-module img {
   width: var(--album-img-size);
   height: var(--album-img-size);
   margin: 0 3.5rem;
-}
-
-.album-img {
-  width: var(--album-img-size);
-  height: var(--album-img-size);
-  margin: 0 3.5rem;
+  border-radius: var(--radius-header);
 }
 
 .btn-upvote,
@@ -261,26 +273,53 @@ input:focus {
   cursor: pointer;
 }
 
+#vote-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .like-count {
   font-size: 20px;
   font-weight: bold;
-  margin-left: 0.5rem;
-  
-}
-
-.arrow-up {
-  color: black;
+  text-align: center;
   margin-left: 0.5rem;
 }
 
+.arrow-up,
 .arrow-down {
-  color: black;
+  cursor: pointer;
   margin-left: 0.5rem;
+}
+
+.arrow-up,
+.arrow-down,
+.like-count {
+  color: var(--color-tertiary);
+  font-size: 1.5rem;
+}
+
+.selected {
+  -webkit-text-stroke: 1px var(--color-btn-vote-default);
+}
+
+.arrow-up.selected {
+  color: var(--color-selected-upvote);
+}
+
+.arrow-down.selected {
+  color: var(--color-selected-downvote);
 }
 
 .arrow-up:hover,
 .arrow-down:hover {
-  color: darkslategrey
+  color: var(--color-primary);
+}
+
+.arrow-up.disabled,
+.arrow-down.disabled {
+  cursor: not-allowed;
 }
 
 .arrow-up:active {
@@ -291,6 +330,117 @@ input:focus {
   color: red;
 }
 
+.new-song-label {
+  height: 10rem;
+  width: 10rem;
+  border-radius: 50%;
+  color: var(--color-text);
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem;
+  position: absolute;
+  top: -50%;
+  left: 10%;
+  transform: rotate(-20deg);
+  opacity: 0;
+  pointer-events: none;
+
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Show only the top 100 tracks */
+.ranking-module:nth-of-type(1n + 101) {
+  display: none;
+}
+
+@media screen and (min-width: 601px) and (max-width: 960px) {
+  .wrapper {
+    width: 80%;
+  }
+
+  .new-song-label {
+    height: 7.5rem;
+    width: 7.5rem;
+    top: -30px;
+    left: 5rem;
+
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper {
+    width: 100%;
+  }
+
+  .ranking-module,
+  .chosenSong,
+  #chosenSongDetails {
+    flex-direction: column;
+  }
+
+  .chosen-song-numbers,
+  .ranking-numbers {
+    font-size: 5rem;
+  }
+
+  .ranking-module {
+    border: 0.1rem solid var(--color-tertiary);
+    box-shadow: 0 0.2rem 0 0 var(--color-tertiary);
+  }
+
+  .album-img,
+  .ranking-module img {
+    display: block;
+    margin-bottom: 2rem;
+    height: var(--album-img-size-mobile);
+    width: var(--album-img-size-mobile);
+  }
+
+  .song-info {
+    width: 100%;
+    text-align: center;
+  }
+
+  #vote-container > div {
+    display: flex;
+    justify-content: space-between;
+    width: 150%;
+  }
+
+  #vote-container > div div,
+  #vote-container > div span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #vote-container > div span {
+    margin-top: 0.75rem;
+  }
+
+  .arrow-up,
+  .arrow-down,
+  .like-count {
+    font-size: 2.5rem;
+    margin: 1rem 0;
+  }
+
+  .new-song-label {
+    top: 75px;
+    left: 1rem;
+    height: 7.5rem;
+    width: 7.5rem;
+    font-size: 1.25rem;
+  }
+}
 
 /* ================= UTILITY CLASSES ============== */
 .no-display {
