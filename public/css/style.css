@@ -51,9 +51,9 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-
   font-family: "Tilt Prism", "Bebas Neue", Arial, Helvetica, sans-serif;
   font-size: xxx-large;
+  letter-spacing: .25rem;
 }
 
 /* ============== HEADER STYLING ============== */
@@ -246,6 +246,16 @@ input:focus {
   font-size: xxx-large;
 }
 
+.ranking-module > .ranking-numbers {
+  color: var(--color-tertiary);
+  width: var(--album-img-size);
+  height: var(--album-img-size);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .album-img,
 .ranking-module img {
   width: var(--album-img-size);
@@ -283,13 +293,13 @@ input:focus {
 .like-count {
   font-size: 20px;
   font-weight: bold;
-  text-align: center;
-  margin-left: 0.5rem;
+  margin: 0 0.7rem;
 }
 
 .arrow-up,
 .arrow-down {
   cursor: pointer;
+  color: var(--color-tertiary);
   margin-left: 0.5rem;
 }
 
@@ -323,7 +333,7 @@ input:focus {
 }
 
 .arrow-up:active {
-  color: orange;
+  color: var(--color-secondary);
 }
 
 .arrow-down:active {
